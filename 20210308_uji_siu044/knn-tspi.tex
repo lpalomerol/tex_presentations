@@ -4,13 +4,13 @@
 \usepackage[T1]{fontenc}
 \graphicspath{ {./img/} }
 
-\usetheme{Madrid}
+\usetheme{Hannover}
 \mode<presentation>
 
 % title and author
-\title{A study of the use of complexity measures in the similarity search process adopted by kNN algorithm for time series predictionn}
+\title{A study of the use of complexity measures in the similarity search process adopted by kNN algorithm for time series prediction}
 \author{Parmezan, Antonio Rafael Sabino, Batista, Gustavo E.A.P.A.}
-
+\date{2021-03-16}
 % document
 \begin{document}
 
@@ -38,62 +38,41 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Aproximaciones paramétricas}
-
+\begin{frame}{Tipos de aproximaciones al problema}
   \begin{block}{Aproximaciones paramétricas}
-
     Basados principalmente en modelos de autorregresión y medias móviles
-
-    \begin{itemize}
-      \item Medias Móviles
-      \item Modelos de Holt - Holt Winters
-      \item Modelos ARIMA - SARIMA
-        \[ y'_t = c + \varphi_1y'_{t-1} + \ldots + \varphi_py'_{t-p} +
+    \[ y'_t = c + \varphi_1y'_{t-1} + \ldots + \varphi_py'_{t-p} +
           \theta_1\varepsilon_{t-1} + \ldots + \theta_q\varepsilon_{t-q} + \varepsilon_t\]
-    \end{itemize}
   \end{block}
-\end{frame}
 
-\begin{frame}{Aproximaciones no paramétricas}
-    Son aproximaciones basadas en técnicas de Machine Learning.
-    
-    Existen dos grandes enfoques: globales y locales
-    \begin{block}{Enfoque global}
+  \begin{block}{Aproximaciones no paramétricas / Machine Learning}
+    \begin{itemize}
+    \item Enfoque \textbf{global}:
       \begin{itemize}
       \item Se entrena el modelo utilizando toda la serie temporal.
       \item Ejemplos: Redes neuronales y Support Vector Machine.
       \end{itemize}
-    \end{block}
-
-    \begin{block}{Enfoque local}
+    \item Enfoque \textbf{local}:
       \begin{itemize}
       \item Se buscan similitudes entre secciones de la serie temporal.
-      \item Ejemplos: Técnicas Nearest Neighbours (kNN)
+      \item Ejemplos: Técnicas Nearest Neighbours (kNN).
       \end{itemize}
-    \end{block}
+    \end{itemize}
+
+  \end{block}
 
 \end{frame}
 
+\section{KNN en series temporales}
 
-
-\section{kNN - TSPI}
 \begin{frame}{kNN en series temporales}
   Esta aproximación busca similitudes en todo el histórico de la serie y realiza predicciones en base a la serie o series más similares.
-  La predicción busca las \textit{k} series más similares de \textit{l} elementos. En este caso las \textit{k} = 3 y \textbf{l} = 25.
+  La predicción busca las \textit{k} (3) series más similares de \textit{l}(25) elementos. 
   \begin{figure}
   \includegraphics[width=8cm]{20210312_1_knn_summary.png}
   \label{fig:ejemplo_knn_ts}
 \end{figure}
-\end{frame}
 
-\begin{frame}{kNN en series temporales}
-  Esta aproximación busca similitudes en todo el histórico de la serie y realiza predicciones en base a la serie o series más similares.
-  La predicción busca las \textit{k} series más similares de \textit{l} elementos. En este caso las \textit{k} = 3 y \textbf{l} = 25.
-  \begin{figure}
-  \includegraphics[width=8cm]{20210312_1_knn_summary.png}
-  \label{fig:ejemplo_knn_ts}
-\end{figure}
-\textbf{La aproximación básica tiene tres grandes problemas.}
 \end{frame}
 
 \begin{frame}{Los tres grandes problemas de kNN}
@@ -118,7 +97,7 @@
       \includegraphics[width=8cm]{20210312_2_problema_offset.png}
       \label{fig:problema_1}
   \end{figure}
-  En este caso se considera S\textsuperscript{2} más similar a Q que S\textsuperscript{1}
+  En este caso se considera S\textsuperscript{2} más similar a Q que S\textsuperscript{1}.
 \end{frame}
 
 \begin{frame}{Los tres grandes problemas}{Problema 2:  Gestión de la varianza en los objetos complejos}
@@ -129,7 +108,7 @@
   \label{fig:problema_2}
 \end{figure}
 
-  En este caso la secuencia simple S\textsuperscript{2} se considera  más similar a Q que S\textsuperscript{1}
+  En este caso la secuencia simple S\textsuperscript{2} se considera  más similar a Q que S\textsuperscript{1}.
 
 \end{frame}
 
@@ -146,22 +125,22 @@
 \begin{frame}{Los tres grandes problemas}{Soluciones}
   \begin{block}{Problema 1: Amplitud y desfase}
     Solución: Transformar las series para que sean invariantes en amplitud y desfase. Por ejemplo aplicando la \textit{z-normalización}.
-    
+    \[  z'_t = \frac{z_t - \mu}{\sigma} \]
   \end{block}
   \begin{block}{Problema 2: Gestión de la varianza en los objetos complejos}
-    Solución: Usar una distancia invariante a la complejidad. 
+    Solución: Usar una distancia invariante a la complejidad (CID). 
   \end{block}
+
   \begin{block}{Problema 3: Tratamiento de las asociaciones triviales}
-    Solución: Excluir automáticamente las asociaciones triviales, en este caso utilizando un chequeo iterativo.
+    Solución: Excluir automáticamente las asociaciones triviales, en este caso utilizando un chequeo iterativo y evitando solapamientos.
   \end{block}
 \end{frame}
 
-
-
-\begin{frame}{kNN-TSPI}
+\begin{frame}{kNN-TSPI}{Una propuesta de adaptación de KNN en el problema de la predicción de las series temporales}
   \begin{columns}
     \begin{column}{0.5\textwidth}
       El algoritmo kNN-Time Series Prediction with Invariances (kNN-TSPI) es una variante del kNN que tiene en cuenta las soluciones de los tres problemas anteriores:
+
       \begin{itemize}
       \item Problema 1: Z-normalización en la línea 3
       \item Problema 2: Aplicación de la distancia invariante en la línea 5*
@@ -174,12 +153,14 @@
           \includegraphics[width=0.8\textwidth]{20210313_2_algoritmo.png}
           \label{fig:algoritmo}
         \end{figure}
-
     \end{column}                
   \end{columns}
-
+  Este es un algoritmo de complejidad $O(m\cdot l)$
   
 \end{frame}
+
+
+\section{Estudio de las métricas de complejidad}
 
 \begin{frame}{Notas sobre la CID}{Definición de la CID}
   La distancia de complejidad invariante usa iformación sobre la distancia euclideana (ED) ajustada por un factor de complejidad (CF).
@@ -194,9 +175,17 @@
 
   \[ CE(Q) = \sqrt{ \sum_{i=1}^{n=1}{  ( q_i - q_{i+1} )^2 } }  \]
 
-Existen muchas variantes de la \textit{CE}: Diferencia absoluta, Compresión, Vértices, Zero-crossing, Permutación de entropía, etc. ¿Cuál es mejor?
+\end{frame}
 
-
+\begin{frame}{Notas sobre la CID}{¿Qué métrica utilizar}
+  \begin{itemize}
+  \item Diferencia cuadrática
+  \item Diferencia absoluta
+  \item Compresión: Aproximación de la complejidad de Kolmogorov usando el algoritmo de compresión LempelZiv.
+  \item Vértices (Edges): Número de vértices en los segmentos, se interpreta como cambios de tendencia.
+  \item Zero-crossing: Número de veces que la señal cambia de signo.
+  \item Permutation-Entropy: Combinación de patrones en la señal.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Notas sobre la CID}{Evaluación empírica}
@@ -205,8 +194,8 @@ Existen muchas variantes de la \textit{CE}: Diferencia absoluta, Compresión, V�
     \begin{column}{0.5\textwidth}
       \begin{itemize}
         \item Paso 1: Selección de 55 series del repositorio ICMC-USP TSPR.
-        \item Paso 2: Para cada aproximación en cada serie, se estiman los parámetros usando el método de Mean Square Error y se realizan las predicciones.
-        \item Paso 3: Para cada aproximación en cada serie, se realizan las predicciones y se comparan usando tres tipos de distancias diferentes: MAPE, Coeficiente Theil U y POCID
+        \item Paso 2: Se estiman los parámetros usando el método de Mean Square Error y se realizan las predicciones.
+        \item Paso 3: Se comparan usando: MAPE, Coeficiente Theil U y POCID.
       \end{itemize}
     \end{column}
 
@@ -221,54 +210,22 @@ Existen muchas variantes de la \textit{CE}: Diferencia absoluta, Compresión, V�
 \end{frame}
 
 
-\section{Resultados}
-
 \begin{frame}{Evaluación empírica de las distancias}{MAPE}
-  \begin{columns}
-    \begin{column}{0.6\textwidth}
-      \begin{block}{MAPE}
-        \begin{itemize}
-        \item No se observan diferencias significativas entre las medidas.
-        \item Los dos mejores son la diferencia cuadrática y Zero-crossing.
-          \end{itemize}
-      \end{block}
-    \end{column}
-    \begin{column}{0.4\textwidth}
-      \begin{figure}
-        \includegraphics[width=\textwidth]{20210313_4_nemenyi_distancias_cd.png}
-      \end{figure}
-    \end{column}
-  \end{columns}
+  \begin{figure}
+    \includegraphics[width=0.6\textwidth]{20210313_4_nemenyi_distancias_cd.png}
+  \end{figure}
 \end{frame}
 
-\begin{frame}{Evaluación empírica de las distancias}{POCID / Theil U}
-
-  \begin{columns}
-    \begin{column}{0.6\textwidth}
-      \begin{block}{POCID}
-        \begin{itemize}
-        \item Los promedios y SD parecen distribuidos uniformemente en el rango 57-60\%.
-        \item El mejor resultado corresponde a la diferencia cuadrática.
-        \end{itemize}
-      \end{block}
-      \begin{block}{Theil's U}
-        \begin{itemize}
-        \item Permutation Entropy muestra el mejor resultado en TU < 1.
-          \item Diferencia absoluta muestra el mejor resultado en TU $\leq$ 0.55.
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \begin{column}{0.4\textwidth}
-      \begin{figure}
-        \includegraphics[width=\textwidth]{20210313_5_tabla_cid.png}
-      \end{figure}
-    \end{column}
-
-  \end{columns}
-  
+\begin{frame}{Evaluación empírica de las distancias}{POCID y Theil U}
+  \begin{figure}
+    \includegraphics[width=0.6\textwidth]{20210313_5_tabla_cid.png}
+  \end{figure}
 \end{frame}
 
-\begin{frame}{Comparando kNN-TSPI con SVM y MLP}
+
+\section{Comparación de KNN-TSPI con otras técnicas no paramétricas}
+
+\begin{frame}{Comparando kNN-TSPI con SVM y MLP}{Hipótesis y diseño experimental}
 
   \begin{block}{Hipótesis a contrastar}
     ¿Existen diferencias significativas entre kNN-TSPI y los métodos de Machine Learning más utilizados?
@@ -284,31 +241,11 @@ Existen muchas variantes de la \textit{CE}: Diferencia absoluta, Compresión, V�
   
 \end{frame}
 
-\begin{frame}{Comparando kNN-TSPI con SVM y MLP}
-
-  \begin{block}{Hipótesis a contrastar}
-    ¿Existen diferencias significativas entre kNN-TSPI y los métodos de Machine Learning más utilizados?
-  \end{block}
-
-  \begin{block}{Resultados}
-    \begin{columns}
-      \begin{column}{0.6\textwidth}
-        \begin{itemize}
-        \item kNN-TSPI presenta resultados intermedios
-        \item No presenta diferencias significativas con SVM, un modelo más difícil de ajustar.
-        \item Mismos resultados usando MAPE y POCID. Con Theil U, kNN-TSPI muestra mejores resultados.
-        \end{itemize}
-      \end{column}
-      \begin{column}{0.4\textwidth}
-        \begin{figure}
-          \includegraphics[width=\textwidth]{20210314_1_nemnyi_distancias_tecnicas_cd.png}
-        \end{figure}
-      \end{column}
-      \end{columns}
-  \end{block}
+\begin{frame}{Comparando kNN-TSPI con SVM y MLP}{Resultados}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{20210314_1_nemnyi_distancias_tecnicas_cd.png}
+  \end{figure}
 \end{frame}
-
-
 
 
 \section{Conclusiones}
@@ -326,7 +263,7 @@ Existen muchas variantes de la \textit{CE}: Diferencia absoluta, Compresión, V�
   \begin{block}{Trabajo futuro}
     \begin{itemize}
     \item Continuar analizando las propiedades de kNN-TSPI.
-    \item Comparar el algoritmo contra los métodos más utilizados, como el SARIMA.
+    \item Comparar el algoritmo contra los métodos más utilizados, como el ARIMA.
     \end{itemize}
 
   \end{block}
