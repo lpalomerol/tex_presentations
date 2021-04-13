@@ -1,6 +1,10 @@
 ## Emacs temp files
 *~
 
+## PDF outputs
+*.pdf
+
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
